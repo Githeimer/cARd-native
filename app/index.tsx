@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import HomeScreen from "./screens/home";
+import { AuthProvider } from './auth/AuthProvider';
 
 export default function Index() {
   return (
-    <View className="flex-1 justify-center items-center">
-      <Text className="text-5xl text-primary font-semibold">Swoham Nigger</Text>
-    </View>
+    <AuthProvider>
+      <HomeScreen />
+    </AuthProvider>
   );
 }
