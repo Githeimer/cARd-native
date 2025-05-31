@@ -1,0 +1,16 @@
+[
+  {
+    "id": "quiz1-easy",
+    "question": "Which one is a fruit?",
+    "image": "apple.png",
+    "options": ["Apple", "Car", "Chair"],
+    "answer": "Apple"
+  },
+  {
+    "id": "quiz2-easy",
+    "question": "Which is a vehicle?",
+    "image": "bus.png",
+    "options": ["Banana", "Bus", "Ball"],
+    "answer": "Bus"
+  }
+]

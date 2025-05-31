@@ -1,206 +1,183 @@
-// SignupScreen.tsx – Enhanced signup UI with grouped fields and dropdown role selector
+// // import React, { useEffect } from 'react';
+// // import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+// // import { useLocalSearchParams, useRouter } from 'expo-router';
+// // import { useAuthContext } from '../auth/AuthProvider';
+// // import LoginScreen from './LoginScreen';
 
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  ScrollView,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { Ionicons } from '@expo/vector-icons';
+// // export default function HomeScreen() {
+// //   const params = useLocalSearchParams();
+// //   const router = useRouter();
+// //   const { user, loading } = useAuthContext();
 
-const SignupScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [role, setRole] = useState('');
+// //   useEffect(() => {
+// //     if (params.oobCode || params.access_token) {
+// //       // Redirect to LoginScreen to show password reset form
+// //       router.replace({ pathname: '/screens/LoginScreen', params });
+// //     }
+// //   }, [params.oobCode, params.access_token]);
 
-  const handleSignup = () => {
-    if (password !== confirmPassword) {
-      Alert.alert('Passwords do not match');
-      return;
-    }
-    // Insert your Supabase sign-up logic here
-    Alert.alert('Account created!', `Welcome, ${firstName}`);
-  };
+// //   const handleStart = () => {
+// //     if (user) {
+// //       router.push('/screens/NextScreen');
+// //     } else {
+// //       router.push('/screens/LoginScreen');
+// //     }
+// //   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <Text style={styles.subtitle}>Create an account to track progress</Text>
+// //   if (loading) {
+// //     return (
+// //       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+// //         <ActivityIndicator size="large" />
+// //       </View>
+// //     );
+// //   }
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Account Info</Text>
-        <TextInput
-          placeholder="Email"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Confirm Password"
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          style={styles.input}
-        />
-      </View>
+// // //   if (!user) return <LoginScreen />;
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Profile Info</Text>
-        <TextInput
-          placeholder="First Name"
-          value={firstName}
-          onChangeText={setFirstName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Last Name"
-          value={lastName}
-          onChangeText={setLastName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Phone (optional)"
-          keyboardType="phone-pad"
-          value={phone}
-          onChangeText={setPhone}
-          style={styles.input}
-        />
-        <Picker
-          selectedValue={role}
-          onValueChange={(itemValue) => setRole(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="Select Role" value="" />
-          <Picker.Item label="Parent" value="parent" />
-          <Picker.Item label="Kid" value="kid" />
-        </Picker>
-      </View>
+// //   return (
+// //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+// //       <Text style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 32 }}>Welcome to cARd</Text>
+// //       <TouchableOpacity
+// //         style={{ backgroundColor: '#2563eb', paddingVertical: 16, paddingHorizontal: 48, borderRadius: 32 }}
+// //         onPress={handleStart}
+// //       >
+// //         <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Start</Text>
+// //       </TouchableOpacity>
+// //     </View>
+// //   );
+// // }
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Create Account</Text>
-      </TouchableOpacity>
+// // --------------------------------
 
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.orText}>or</Text>
-        <View style={styles.divider} />
-      </View>
+// import React from 'react';
+// import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+// import { useRouter } from 'expo-router';
 
-      <TouchableOpacity style={[styles.button, styles.googleButton]}>
-        <Ionicons name="logo-google" size={20} color="white" />
-        <Text style={styles.buttonText}>  Continue with Google</Text>
-      </TouchableOpacity>
+// const getGreeting = () => {
+//   const hour = new Date().getHours();
+//   if (hour < 12) return 'Good morning';
+//   if (hour < 18) return 'Good afternoon';
+//   return 'Good evening';
+// };
 
-      <TouchableOpacity>
-        <Text style={styles.guestText}>Continue as Guest</Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
-};
+// const getDateString = () => {
+//   return new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+// };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-    backgroundColor: '#F1F5F9',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginTop: 32,
-    color: '#1E293B',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#64748B',
-    marginBottom: 20,
-  },
-  card: {
-    width: '100%',
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#334155',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3B82F6',
-    paddingVertical: 14,
-    borderRadius: 8,
-    width: '100%',
-    marginBottom: 12,
-  },
-  googleButton: {
-    backgroundColor: '#EA4335',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#CBD5E1',
-  },
-  orText: {
-    marginHorizontal: 8,
-    color: '#64748B',
-  },
-  guestText: {
-    marginTop: 8,
-    fontSize: 14,
-    color: '#64748B',
-    textDecorationLine: 'underline',
-  },
-});
+// export default function DashboardScreen() {
+//   const router = useRouter();
 
-export default SignupScreen;
+//   return (
+//     <View style={styles.bgWrapper}>
+//       {/* Optional: Subtle background pattern or mascot */}
+//       {/* <Image source={require('../../assets/images/cool.webp')} style={styles.bgMascot} /> */}
+//       <View style={styles.card}>
+//         <Text style={styles.greeting}>{getGreeting()}! 👋</Text>
+//         <Text style={styles.date}>{getDateString()}</Text>
+//         <Text style={styles.title}>Dashboard</Text>
+//         <View style={styles.divider} />
+//         <TouchableOpacity
+//           style={styles.button}
+//           onPress={() => router.push('/screens/ProfileScreen')}
+//         >
+//           <Text style={styles.buttonText}>👤 View Profile</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity
+//           style={[styles.button, styles.quizButton]}
+//           onPress={() => router.push('/screens/QuizListScreen')}
+//         >
+//           <Text style={styles.buttonText}>🎮 Start Game</Text>
+//         </TouchableOpacity>
+//         <Text style={styles.quote}>
+//           "Learning is a treasure that will follow its owner everywhere."
+//         </Text>
+//       </View>
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   bgWrapper: {
+//     flex: 1,
+//     backgroundColor: '#f0f4ff',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   // bgMascot: {
+//   //   position: 'absolute',
+//   //   opacity: 0.08,
+//   //   width: 320,
+//   //   height: 320,
+//   //   top: '30%',
+//   //   left: '10%',
+//   //   zIndex: 0,
+//   // },
+//   card: {
+//     backgroundColor: '#fff',
+//     borderRadius: 28,
+//     padding: 32,
+//     width: '90%',
+//     maxWidth: 400,
+//     alignItems: 'center',
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 6 },
+//     shadowOpacity: 0.08,
+//     shadowRadius: 16,
+//     elevation: 6,
+//   },
+//   greeting: {
+//     fontSize: 22,
+//     fontWeight: '600',
+//     color: '#6366f1',
+//     marginBottom: 2,
+//   },
+//   date: {
+//     fontSize: 15,
+//     color: '#64748b',
+//     marginBottom: 10,
+//   },
+//   title: {
+//     fontSize: 32,
+//     fontWeight: 'bold',
+//     marginBottom: 18,
+//     color: '#1e3a8a',
+//     letterSpacing: 1,
+//   },
+//   divider: {
+//     width: '80%',
+//     height: 1,
+//     backgroundColor: '#e0e7ff',
+//     marginBottom: 24,
+//   },
+//   button: {
+//     backgroundColor: '#4f46e5',
+//     paddingVertical: 16,
+//     paddingHorizontal: 32,
+//     borderRadius: 24,
+//     marginVertical: 10,
+//     width: '100%',
+//     alignItems: 'center',
+//     shadowColor: '#6366f1',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.12,
+//     shadowRadius: 6,
+//     elevation: 2,
+//   },
+//   quizButton: {
+//     backgroundColor: '#10b981',
+//   },
+//   buttonText: {
+//     fontSize: 20,
+//     color: '#fff',
+//     fontWeight: '700',
+//     letterSpacing: 0.5,
+//   },
+//   quote: {
+//     marginTop: 32,
+//     fontSize: 15,
+//     color: '#64748b',
+//     fontStyle: 'italic',
+//     textAlign: 'center',
+//     opacity: 0.85,
+//   },
+// });

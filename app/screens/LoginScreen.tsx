@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import {
   signInWithEmail,
   signUpWithEmail,
   signInWithGoogle,
   signOut,
-  getCurrentUser
+  getCurrentUser,
+  resetPasswordWithEmail,
+  updatePasswordWithOobCode
 } from '../auth';
 import styles from './loginScreenStyles';
 
@@ -23,7 +25,24 @@ export default function LoginScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showReset, setShowReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetMsg, setResetMsg] = useState('');
+  const [oobCode, setOobCode] = useState('');
+  const [showPasswordResetForm, setShowPasswordResetForm] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [resetPasswordMsg, setResetPasswordMsg] = useState('');
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  React.useEffect(() => {
+    if (params.oobCode) {
+      const code = Array.isArray(params.oobCode) ? params.oobCode[0] : params.oobCode;
+      setOobCode(code);
+      setShowPasswordResetForm(true);
+    }
+  }, [params.oobCode]);
 
   const handleSubmit = async () => {
     setErrorMsg('');
@@ -57,7 +76,7 @@ export default function LoginScreen() {
       } else {
         const { error } = await signInWithEmail(email, password);
         if (error) throw error;
-        router.replace('/screens/NextScreen');
+        router.replace('/screens/DashboardScreen');
       }
     } catch (error) {
       let errMsg = 'Unknown error';
@@ -111,6 +130,84 @@ export default function LoginScreen() {
     setIsSignUp(false);
   };
 
+  // --- Password Reset Handlers ---
+  const handleShowReset = () => {
+    setShowReset(true);
+    setResetEmail('');
+    setResetMsg('');
+    setErrorMsg('');
+  };
+
+  const handleResetPassword = async () => {
+    setResetMsg('');
+    setErrorMsg('');
+    if (!resetEmail.trim()) {
+      setErrorMsg('Please enter your email to reset password.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await resetPasswordWithEmail(resetEmail.trim());
+      if (error) throw error;
+      setResetMsg('Password reset email sent! Please check your inbox.');
+    } catch (error) {
+      let errMsg = 'Unknown error';
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
+        errMsg = (error as any).message;
+      } else if (typeof error === 'string') {
+        errMsg = error;
+      } else {
+        try { errMsg = JSON.stringify(error); } catch { /* ignore */ }
+      }
+      setErrorMsg(String(errMsg));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handler for submitting new password after clicking email link
+  const handleSetNewPassword = async () => {
+    setErrorMsg('');
+    setResetPasswordMsg('');
+    if (!newPassword || !confirmNewPassword) {
+      setErrorMsg('Please enter and confirm your new password.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setErrorMsg('Passwords do not match.');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setErrorMsg('Password must be at least 6 characters long.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await updatePasswordWithOobCode(oobCode, newPassword);
+      if (error) throw error;
+      setResetPasswordMsg('Password updated! You can now log in.');
+      // Sign out after password reset to force re-login
+      await signOut();
+      setTimeout(() => {
+        setShowPasswordResetForm(false);
+        setResetPasswordMsg('');
+        router.replace('/screens/LoginScreen');
+      }, 1500);
+    } catch (error) {
+      let errMsg = 'Unknown error';
+      if (error && typeof error === 'object' && 'message' in error && typeof (error as any).message === 'string') {
+        errMsg = (error as any).message;
+      } else if (typeof error === 'string') {
+        errMsg = error;
+      } else {
+        try { errMsg = JSON.stringify(error); } catch { /* ignore */ }
+      }
+      setErrorMsg(String(errMsg));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <View style={styles.overlay}>
@@ -142,6 +239,91 @@ export default function LoginScreen() {
           Guest mode is for quick access only. To save your progress, achievements, and sync across devices, create a free account!
         </Text>
       </View>
+    );
+  }
+
+  if (showReset) {
+    return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.card}>
+            <Text style={styles.headerTitle}>Reset Password</Text>
+            <Text style={{ color: '#64748b', fontSize: 16, marginBottom: 18, textAlign: 'center' }}>
+              Enter your email address and we'll send you a password reset link.
+            </Text>
+            <Text style={styles.label}>Email Address</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
+              value={resetEmail}
+              onChangeText={setResetEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+            />
+            {errorMsg ? <Text style={styles.errorMsg}>{errorMsg}</Text> : null}
+            {resetMsg ? <Text style={styles.successMsg}>{resetMsg}</Text> : null}
+            <TouchableOpacity style={styles.primaryBtn} onPress={handleResetPassword}>
+              <Text style={styles.primaryBtnText}>Send Reset Link</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginTop: 18 }} onPress={() => setShowReset(false)}>
+              <Text style={{ color: '#2563eb', fontSize: 16, textAlign: 'center' }}>Back to Login</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
+  }
+
+  if (showPasswordResetForm) {
+    return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.card}>
+            <Text style={styles.headerTitle}>Set New Password</Text>
+            <Text style={{ color: '#64748b', fontSize: 16, marginBottom: 18, textAlign: 'center' }}>
+              Enter your new password below to complete the reset process.
+            </Text>
+            <Text style={styles.label}>New Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="New password"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+              autoComplete="new-password"
+            />
+            <Text style={styles.label}>Confirm New Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm new password"
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+              secureTextEntry
+              autoComplete="new-password"
+            />
+            {errorMsg ? <Text style={styles.errorMsg}>{errorMsg}</Text> : null}
+            {resetPasswordMsg ? <Text style={styles.successMsg}>{resetPasswordMsg}</Text> : null}
+            <TouchableOpacity style={styles.primaryBtn} onPress={handleSetNewPassword}>
+              <Text style={styles.primaryBtnText}>Set New Password</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 
@@ -296,6 +478,12 @@ export default function LoginScreen() {
                 {isSignUp ? 'Create Account' : 'Login'}
               </Text>
             </TouchableOpacity>
+            {/* Forgot Password Link (Login only) */}
+            {!isSignUp && (
+              <TouchableOpacity style={{ marginTop: 16, alignSelf: 'center' }} onPress={handleShowReset}>
+                <Text style={{ color: '#2563eb', fontSize: 16 }}>Forgot Password?</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Divider */}
