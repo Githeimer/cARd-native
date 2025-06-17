@@ -4,7 +4,7 @@
     "slug": "cARd",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/cool.webp",
+    "icon": "./assets/images/app.jpg",
     "scheme": "movies",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,21 +13,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/cool.webp",
+        "foregroundImage": "./assets/images/app.jpg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.swohamkayastha.cARd"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/cool.webp"
+      "favicon": "./assets/images/app.jpg"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/cool.webp",
+          "image": "./assets/images/app.jpg",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -36,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c7b18b2f-9a31-46ef-91c2-7a3f4da43817"
+      }
     }
   }
 }

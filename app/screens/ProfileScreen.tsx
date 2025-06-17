@@ -266,7 +266,7 @@ export default function ProfileScreen() {
   }
 
   // Avatar logic
-  let avatarSource = require('../../assets/images/cool.webp');
+  let avatarSource = require('../../assets/images/profile.jpg');
   if (profile?.avatar_url) {
     avatarSource = { uri: profile.avatar_url };
   }
