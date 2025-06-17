@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuthContext } from '../auth/AuthProvider';
 
@@ -25,22 +25,27 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="#4F46E5" />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {/* Mascot or fun image */}
-      <Image source={require('../../assets/images/cool.webp')} style={styles.mascot} />
-      <Text style={styles.welcomeText}>Welcome to</Text>
-      <Text style={styles.title}>cARd</Text>
-      <Text style={styles.motto}>Learn words, play games, and have fun!</Text>
-      <TouchableOpacity style={styles.startButton} onPress={handleStart}>
-        <Text style={styles.startText}>🚀 Start Learning!</Text>
-      </TouchableOpacity>
-      <Text style={styles.subText}>🧠 Ready to learn? Tap Start!</Text>
+      <View style={styles.contentContainer}>
+        <Text style={styles.welcomeText}>स्वागत छ</Text>
+        <Text style={styles.title}>cARd</Text>
+        <Text style={styles.motto}>शब्दहरू सिकौं, रमाईलो गरौं!</Text>
+
+        <TouchableOpacity style={styles.startButton} onPress={handleStart}>
+          <View style={styles.buttonContent}>
+            <Text style={styles.startIcon}></Text>
+            <Text style={styles.startText}>सुरु गरौं 🚀</Text>
+          </View>
+        </TouchableOpacity>
+
+        <Text style={styles.subText}>सिक्न तयार हुनु भयो?</Text>
+      </View>
     </View>
   );
 }
@@ -50,69 +55,74 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F0F9FF', // calm light blue
   },
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Soft yellow/cream
+    backgroundColor: '#F0F9FF',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: 32,
   },
-  mascot: {
-    width: 120,
-    height: 120,
-    marginBottom: 18,
-    borderRadius: 60,
-    borderWidth: 4,
-    borderColor: '#fbbf24', // playful yellow
-    backgroundColor: '#fffbe7',
+  contentContainer: {
+    alignItems: 'center',
+    maxWidth: 320,
   },
   welcomeText: {
-    fontSize: 26,
-    fontWeight: '600',
-    color: '#f59e42',
-    fontFamily: 'Comic Sans MS', // playful font
-    marginBottom: 2,
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#0F172A', // deep gray
+    marginBottom: 4,
+    letterSpacing: 0.5,
   },
   title: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#1e40af',
-    fontFamily: 'Comic Sans MS',
-    letterSpacing: 2,
+    fontSize: 56,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#0284C7', // sky blue
+    letterSpacing: -1,
   },
   motto: {
-    fontSize: 20,
-    color: '#10b981',
-    marginBottom: 32,
-    fontFamily: 'Comic Sans MS',
+    fontSize: 18,
+    color: '#10B981', // emerald green
+    marginBottom: 40,
     textAlign: 'center',
+    lineHeight: 26,
+    fontWeight: '500',
   },
   startButton: {
-    backgroundColor: '#fbbf24',
-    paddingVertical: 22,
-    paddingHorizontal: 60,
-    borderRadius: 50,
-    elevation: 4,
-    marginBottom: 18,
-    shadowColor: '#f59e42',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    backgroundColor: '#0284C7', // sky blue
+    paddingVertical: 18,
+    paddingHorizontal: 48,
+    borderRadius: 32,
+    elevation: 6,
+    marginBottom: 24,
+    shadowColor: '#0284C7',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    minWidth: 200,
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  startIcon: {
+    fontSize: 20,
+    marginRight: 8,
   },
   startText: {
-    fontSize: 26,
-    color: '#fff',
-    fontWeight: 'bold',
-    fontFamily: 'Comic Sans MS',
-    letterSpacing: 1,
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   subText: {
-    marginTop: 12,
-    fontSize: 18,
-    color: '#4b5563',
-    fontFamily: 'Comic Sans MS',
+    fontSize: 16,
+    color: '#475569',
     textAlign: 'center',
+    lineHeight: 24,
+    fontWeight: '400',
   },
 });
