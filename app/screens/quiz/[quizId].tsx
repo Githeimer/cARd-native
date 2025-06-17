@@ -213,66 +213,65 @@ export default function QuizDetailScreen() {
       console.error('Failed to record interaction:', err);
     }
   };
-
   const getImage = (img?: string) => {
     switch (img) {
       case 'apple.png':
       case 'apple.jpg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\apple.jpg');
+        return require('../../../assets/images/apple.jpg');
       case 'bus.png':
       case 'bus.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\bus.jpeg');
+        return require('../../../assets/images/bus.jpeg');
       case 'chair.png':
       case 'chair.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\chair.jpg');
+        return require('../../../assets/images/chair.jpg');
       case 'bed.png':
       case 'bed.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\bed.jpeg');
+        return require('../../../assets/images/bed.jpeg');
       
       case 'hospital.png':
       case 'hospital.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\hospital.jpg');
+        return require('../../../assets/images/hospital.jpg');
       case 'momo.jpg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\momo.jpg');
+        return require('../../../assets/images/momo.jpg');
       case 'playground.png':
       case 'playground.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\playground.png');
+        return require('../../../assets/images/playground.png');
       case 'restaurant.png':
       case 'restaurant.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\restaurant.png');
+        return require('../../../assets/images/restaurant.png');
       case 'soap.png':
       case 'soap.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\soap.jpg');
+        return require('../../../assets/images/soap.jpg');
       case 'sleeping.png':
       case 'sleeping.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\sleeping.jpeg');
+        return require('../../../assets/images/sleeping.jpeg');
       case 'reading.png':
       case 'reading.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\reading.jpeg');
+        return require('../../../assets/images/reading.jpeg');
       case 'bath.png':
       case 'bath.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\bath.jpeg');
+        return require('../../../assets/images/bath.jpeg');
       case 'playing.png':
       case 'playing.jpg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\playing.jpg');
+        return require('../../../assets/images/playing.jpg');
       case 'soap.png':
       case 'soap.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\soap.jpg');
+        return require('../../../assets/images/soap.jpg');
       case 'rice.png':
       case 'rice.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\rice.jpg');
+        return require('../../../assets/images/rice.jpg');
       case 'book.png':
       case 'book.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\book.jpg');
+        return require('../../../assets/images/book.jpg');
       case 'spoon.png':
       case 'spoon.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\spoon.jpg');
+        return require('../../../assets/images/spoon.jpg');
       case 'banana.png':
       case 'banana.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\banana.jpg');
+        return require('../../../assets/images/banana.jpg');
       case 'toothbrush.png':
       case 'toothbrush.jpeg':
-        return require('C:\\Coding\\cARd\\final-app\\cARd-native\\assets\\images\\toothbrush.jpg');
+        return require('../../../assets/images/toothbrush.jpg');
 
       default:
         return null;

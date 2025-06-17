@@ -4,7 +4,7 @@
     "slug": "cARd",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/app.jpg",
+    "icon": "./assets/images/app.png",
     "scheme": "movies",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/app.jpg",
+        "foregroundImage": "./assets/images/app.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.swohamkayastha.cARd"
@@ -21,14 +21,14 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/app.jpg"
+      "favicon": "./assets/images/app.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/app.jpg",
+          "image": "./assets/images/app.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
