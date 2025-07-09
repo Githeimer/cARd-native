@@ -236,6 +236,7 @@ export default function BottomTabs() {
         name="screens/quiz/[quizId]" 
         options={{ 
           href: null, // This hides it from the tab bar
+          tabBarStyle: { display: 'none' },
         }} 
       />
       <Tabs.Screen 

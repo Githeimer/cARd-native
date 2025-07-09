@@ -272,9 +272,11 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-slate-50" contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView className="flex-1 bg-slate-50" contentContainerStyle={{ paddingBottom: 100 }}>
       {/* Header: User Info */}
-      <View className="bg-gradient-to-br from-teal-600 to-cyan-600 px-6 pt-12 pb-8 items-center">
+      {/* <View className="bg-gradient-to-br from-teal-600 to-cyan-600 px-6 pt-12 pb-8 items-center"> */}
+      {/* <View className="bg-slate-800 px-6 pt-12 pb-8 items-center"> */}
+      <View className="bg-blue-600 px-6 pt-12 pb-8 items-center">
         <View className="w-28 h-28 rounded-full bg-white justify-center items-center mb-4 shadow-lg overflow-hidden">
           <Image source={avatarSource} className="w-24 h-24 rounded-full" resizeMode="cover" />
         </View>
@@ -286,6 +288,14 @@ export default function ProfileScreen() {
           </View>
         )}
       </View>
+      <View 
+    className="absolute bottom-0 left-0 right-0 h-8 bg-slate-50"
+    style={{
+      borderTopLeftRadius: 50,
+      borderTopRightRadius: 50,
+    }}
+  />
+      
 
       {/* Summary Cards */}
       <View className="flex-row flex-wrap justify-center gap-4 mt-8 px-4">

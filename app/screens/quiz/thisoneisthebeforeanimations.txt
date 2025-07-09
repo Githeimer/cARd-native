@@ -1151,8 +1151,8 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   audioPlayerContainer: {
-    marginTop: 5,
-    marginBottom: 20,
+    marginTop: 0,
+    marginBottom: 16,
     alignItems: 'center',
   },
   audioButton: {

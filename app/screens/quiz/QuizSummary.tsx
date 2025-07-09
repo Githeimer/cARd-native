@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function QuizSummary() {
@@ -8,48 +8,74 @@ export default function QuizSummary() {
   
   return (
     <View style={styles.container}>
-      <View style={styles.celebrationContainer}>
-        <View style={styles.successIcon}>
-          <Text style={styles.successEmoji}>🎉</Text>
-        </View>
-        
-        <Text style={styles.title}>Amazing Work!</Text>
-        <Text style={styles.subtitle}>
-          You've completed the {quizId?.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} quiz
-        </Text>
-        
-        <View style={styles.achievementCard}>
-          <View style={styles.achievementIcon}>
-            <Text style={styles.achievementEmoji}>⭐</Text>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Main celebration card */}
+        <View style={styles.celebrationCard}>
+          <View style={styles.successIcon}>
+            <Text style={styles.successEmoji}>🎉</Text>
           </View>
-          <Text style={styles.achievementText}>
-            Every question you answered helps you learn and grow!
+          
+          <Text style={styles.title}>Great Work!</Text>
+          <Text style={styles.subtitle}>
+            You completed the {quizId?.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} quiz
+          </Text>
+          
+          {/* Achievement badges */}
+          <View style={styles.badgesContainer}>
+            <View style={styles.badge}>
+              <Text style={styles.badgeEmoji}>🏆</Text>
+              <Text style={styles.badgeText}>Quiz Master</Text>
+            </View>
+            <View style={styles.badge}>
+              <Text style={styles.badgeEmoji}>🌟</Text>
+              <Text style={styles.badgeText}>Super Learner</Text>
+            </View>
+            <View style={styles.badge}>
+              <Text style={styles.badgeEmoji}>🎯</Text>
+              <Text style={styles.badgeText}>Sharp Thinker</Text>
+            </View>
+          </View>
+          
+          {/* Encouragement message */}
+          <View style={styles.messageCard}>
+            <Text style={styles.messageText}>
+              "Learning is like playing - the more you do it, the better you get!" 
+            </Text>
+            <Text style={styles.messageAuthor}>Keep up the awesome work! 💪</Text>
+          </View>
+        </View>
+        
+        {/* Fun facts section */}
+        <View style={styles.funFactsCard}>
+          <View style={styles.funFactsHeader}>
+            <Text style={styles.funFactsEmoji}>🎪</Text>
+            <Text style={styles.funFactsTitle}>Did You Know?</Text>
+          </View>
+          <Text style={styles.funFactsText}>
+            Your brain creates new connections every time you learn something new! 🧠✨
           </Text>
         </View>
         
-        <View style={styles.encouragementCard}>
-          <Text style={styles.encouragementText}>
-            "Learning is a journey, not a destination. You're doing great!" 
-          </Text>
-          <Text style={styles.encouragementAuthor}>- Keep up the excellent work! 💪</Text>
+        {/* Action buttons */}
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity 
+            style={styles.primaryButton}
+            onPress={() => router.replace(`/screens/quiz/${quizId}`)}
+          >
+            <Text style={styles.primaryButtonText}>🎮 Play Again</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.secondaryButton}
+            onPress={() => router.replace('/screens/QuizListScreen')}
+          >
+            <Text style={styles.secondaryButtonText}>🏠 Back to Quizzes</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => router.replace(`/screens/quiz/${quizId}`)}
-        >
-          <Text style={styles.buttonText}>Play Again</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.button, styles.secondaryButton]}
-          onPress={() => router.replace('/screens/QuizListScreen')}
-        >
-          <Text style={[styles.buttonText, styles.secondaryButtonText]}>Back to Quiz List</Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -57,27 +83,30 @@ export default function QuizSummary() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: '#fef9c3',
-    justifyContent: 'center',
+    backgroundColor: '#F8FAFC',
   },
-  celebrationContainer: {
-    backgroundColor: '#fff',
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+    paddingTop: 60,
+  },
+  celebrationCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     padding: 24,
-    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    marginBottom: 24,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+    marginBottom: 20,
   },
   successIcon: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#fef08a',
+    backgroundColor: '#FEF3C7',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -87,86 +116,134 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#7c3aed',
+    fontWeight: '700',
+    color: '#1E293B',
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: '#64748B',
     textAlign: 'center',
     marginBottom: 24,
+    fontWeight: '500',
+    lineHeight: 22,
   },
-  achievementCard: {
+  badgesContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0fdf4',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
+    justifyContent: 'space-between',
     width: '100%',
+    marginBottom: 24,
+    gap: 12,
   },
-  achievementIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#d9f99d',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  achievementEmoji: {
-    fontSize: 20,
-  },
-  achievementText: {
+  badge: {
     flex: 1,
-    fontSize: 14,
-    color: '#166534',
-  },
-  encouragementCard: {
-    backgroundColor: '#f3e8ff',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 16,
     padding: 16,
-    borderRadius: 12,
-    width: '100%',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  encouragementText: {
-    fontSize: 14,
-    fontStyle: 'italic',
-    color: '#7e22ce',
+  badgeEmoji: {
+    fontSize: 24,
     marginBottom: 8,
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#475569',
     textAlign: 'center',
   },
-  encouragementAuthor: {
-    fontSize: 12,
-    color: '#9333ea',
+  messageCard: {
+    backgroundColor: '#EFF6FF',
+    borderRadius: 16,
+    padding: 20,
+    width: '100%',
+    borderLeftWidth: 4,
+    borderLeftColor: '#3B82F6',
+  },
+  messageText: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#1D4ED8',
+    marginBottom: 8,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  messageAuthor: {
+    fontSize: 14,
+    color: '#3B82F6',
     textAlign: 'right',
+    fontWeight: '600',
+  },
+  funFactsCard: {
+    backgroundColor: '#FEFCE8',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#FDE047',
+  },
+  funFactsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  funFactsEmoji: {
+    fontSize: 20,
+    marginRight: 8,
+  },
+  funFactsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#CA8A04',
+  },
+  funFactsText: {
+    fontSize: 14,
+    color: '#A16207',
+    textAlign: 'center',
+    lineHeight: 20,
+    fontWeight: '500',
   },
   actionsContainer: {
     gap: 12,
   },
-  button: {
-    backgroundColor: '#8b5cf6',
+  primaryButton: {
+    backgroundColor: '#4F46E5',
     paddingVertical: 16,
     paddingHorizontal: 24,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  buttonText: {
-    color: '#fff',
+  primaryButtonText: {
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   secondaryButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#8b5cf6',
+    borderColor: '#E2E8F0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
   secondaryButtonText: {
-    color: '#8b5cf6',
+    color: '#4F46E5',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
