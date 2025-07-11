@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../auth/useAuth';
 import { supabase } from '../supabaseClient';
 import { BarChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -48,10 +49,12 @@ export default function ProfileScreen() {
     if (profileError) {
       console.error('Supabase profile fetch error:', profileError);
     }
-    setProfile(profileData);    // 2. Fetch sessions (sessions.user_id) - Get sessions with some completion data
+    setProfile(profileData);
+    // 2. Fetch sessions (sessions.user_id) - Get sessions with some completion data
     let sessions: Array<any> = [];
     let interactions: Array<any> = [];
     let sessionIds: string[] = [];
+
     try {
       const { data: sessionRows, error: sessionError } = await supabase
         .from('sessions')
@@ -89,6 +92,22 @@ export default function ProfileScreen() {
       console.error('Supabase interactions fetch error:', err);
     }
 
+    // 4. Fetch quizzes for metadata enrichment
+    let quizRows: any[] = [];
+    try {
+      const { data: quizzesData, error: quizzesError } = await supabase
+        .from('quizzes')
+        .select('id, quiz_id, category, question_type, option_type');
+      if (quizzesError) console.error('Supabase quizzes fetch error:', quizzesError);
+      if (quizzesData) quizRows = quizzesData;
+    } catch (err) {
+      console.error('Supabase quizzes fetch error:', err);
+    }
+    const quizMap = new Map();
+    quizRows.forEach(q => {
+      quizMap.set(q.quiz_id || q.id, q);
+    });
+
     // Fallback mock data if empty
     if (!sessions.length) {
       const today = new Date();
@@ -99,12 +118,34 @@ export default function ProfileScreen() {
           created_at: d.toISOString(),
           correct_count: Math.floor(Math.random() * 10) + 1,
           total_count: 10,
-          accuracy: Math.floor(Math.random() * 20) + 80,
           mood: ['😊', '😃', '😅', '🤩', '😴', '😎', '🥳'][i],
           retry_count: Math.random() * 2 + 1,
           avg_time: Math.random() * 20 + 20,
+          quiz_id: 'mock_quiz',
         };
       });
+    }
+
+    // 5. Build quizHistory with metadata
+    const quizHistory = sessions.map((s: any) => {
+      const quiz = quizMap.get(s.quiz_id) || {};
+      return {
+        quiz_id: s.quiz_id || '',
+        category: quiz.category || 'General',
+        type: `${quiz.question_type || 'text'} → ${quiz.option_type || 'text'}`,
+        score: s.correct_count ?? 0,
+        total: (s.correct_count ?? 0) + (s.wrong_count ?? 0),
+        accuracy: (s.correct_count + s.wrong_count) > 0
+          ? Math.round((s.correct_count / (s.correct_count + s.wrong_count)) * 100)
+          : 0,
+        time_spent: s.avg_time ? `${Math.round(s.avg_time)}s` : '',
+        last_attempt: s.ended_at || s.started_at || s.created_at || '',
+      };
+    });
+    try {
+      await AsyncStorage.setItem('quizHistory', JSON.stringify(quizHistory));
+    } catch (e) {
+      console.warn('Failed to save quiz history to AsyncStorage', e);
     }
     if (!interactions.length) {
       interactions = sessions.map((s: any) => ({
@@ -389,6 +430,28 @@ export default function ProfileScreen() {
             How you felt each day (😐 = no quiz completed)
           </Text>
         </View>
+      </View>
+      <View className="px-4 mt-8">
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#10b981',
+            paddingVertical: 14,
+            borderRadius: 16,
+            marginBottom: 18,
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 6,
+            elevation: 2,
+          }}
+          activeOpacity={0.85}
+          onPress={() => router.push('/screens/QuizProgressScreen')}
+        >
+          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 18 }}>
+            📊 View Quiz Progress
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

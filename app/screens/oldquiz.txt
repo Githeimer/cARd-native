@@ -1,0 +1,503 @@
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
+
+const screenWidth = Dimensions.get('window').width;
+
+type QuizHistoryItem = {
+  quiz_id: string;
+  category: string;
+  type: string;
+  score: number;
+  total: number;
+  accuracy: number;
+  time_spent: string;
+  last_attempt: string;
+};
+
+export default function QuizProgress() {
+  const [history, setHistory] = useState<QuizHistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadHistory() {
+      setLoading(true);
+      try {
+        const data = await AsyncStorage.getItem('quizHistory');
+        setHistory(data ? JSON.parse(data) : []);
+      } catch (e) {
+        setHistory([]);
+      }
+      setLoading(false);
+    }
+    loadHistory();
+  }, []);
+
+  // Prepare chart data
+  const accuracyData = history.map((h, index) => ({
+    date: new Date(h.last_attempt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    accuracy: h.accuracy,
+    index: index + 1,
+  }));
+
+  const categoryScores: { [category: string]: number[] } = {};
+  history.forEach((h) => {
+    if (!categoryScores[h.category]) categoryScores[h.category] = [];
+    categoryScores[h.category].push(h.score);
+  });
+  const barData = Object.keys(categoryScores).map((cat) => ({
+    category: cat,
+    avgScore:
+      categoryScores[cat].reduce((a: number, b: number) => a + b, 0) /
+      categoryScores[cat].length,
+  }));
+
+  const typeCounts: { [type: string]: number } = {};
+  history.forEach((h) => {
+    typeCounts[h.type] = (typeCounts[h.type] || 0) + 1;
+  });
+  const pieData = Object.keys(typeCounts).map((type, index) => ({
+    name: type,
+    count: typeCounts[type],
+    color: ['#6366f1', '#8b5cf6', '#ec4899', '#06b6d4', '#10b981', '#f59e0b'][index % 6],
+    legendFontColor: '#374151',
+    legendFontSize: 12,
+  }));
+
+  // Generate insights
+  const generateInsights = () => {
+    if (history.length < 2) return null;
+    
+    const recentAttempts = history.slice(-3);
+    const avgRecentAccuracy = recentAttempts.reduce((sum, h) => sum + h.accuracy, 0) / recentAttempts.length;
+    
+    if (avgRecentAccuracy > 80) {
+      return "🌟 Great job! Your child is showing excellent accuracy in recent quizzes!";
+    } else if (avgRecentAccuracy > 60) {
+      return "📈 Good progress! Keep practicing to improve accuracy.";
+    } else {
+      return "💪 Practice makes perfect! Consider reviewing challenging topics.";
+    }
+  };
+
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <TouchableOpacity style={styles.backButton}>
+        <Text style={styles.backButtonText}>← Back</Text>
+      </TouchableOpacity>
+      <Text style={styles.title}>📊 Quiz Progress</Text>
+      <Text style={styles.subtitle}>Track your child's quiz activity and learning trends</Text>
+    </View>
+  );
+
+  const renderSummaryStats = () => {
+    if (history.length === 0) return null;
+    
+    const totalAttempts = history.length;
+    const avgAccuracy = history.reduce((sum, h) => sum + h.accuracy, 0) / totalAttempts;
+    const totalCorrect = history.reduce((sum, h) => sum + h.score, 0);
+    const totalQuestions = history.reduce((sum, h) => sum + h.total, 0);
+    
+    return (
+      <View style={styles.summaryContainer}>
+        <Text style={styles.sectionTitle}>📋 Quick Summary</Text>
+        <View style={styles.statsRow}>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{totalAttempts}</Text>
+            <Text style={styles.statLabel}>Total Attempts</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{Math.round(avgAccuracy)}%</Text>
+            <Text style={styles.statLabel}>Average Accuracy</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{totalCorrect}/{totalQuestions}</Text>
+            <Text style={styles.statLabel}>Questions Correct</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const renderInsights = () => {
+    const insight = generateInsights();
+    if (!insight) return null;
+    
+    return (
+      <View style={styles.insightContainer}>
+        <Text style={styles.insightText}>{insight}</Text>
+      </View>
+    );
+  };
+
+  const renderAttemptCard = ({ item }: { item: QuizHistoryItem }) => (
+    <View style={styles.attemptCard}>
+      <View style={styles.cardHeader}>
+        <Text style={styles.cardCategory}>📚 {item.category}</Text>
+        <Text style={styles.cardAccuracy}>{item.accuracy}%</Text>
+      </View>
+      <View style={styles.cardContent}>
+        <Text style={styles.cardDetail}>🎯 Type: {item.type}</Text>
+        <Text style={styles.cardDetail}>✅ Score: {item.score} / {item.total}</Text>
+        <Text style={styles.cardDetail}>⏱ Time: {item.time_spent}</Text>
+        <Text style={styles.cardDetail}>📅 Date: {new Date(item.last_attempt).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          year: 'numeric'
+        })}</Text>
+      </View>
+    </View>
+  );
+
+  const renderCharts = () => {
+    if (history.length === 0) return null;
+    
+    return (
+      <View style={styles.chartsContainer}>
+        <Text style={styles.sectionTitle}>📊 Progress Charts</Text>
+        
+        {history.length >= 2 && (
+          <>
+            <View style={styles.chartSection}>
+              <Text style={styles.chartTitle}>Accuracy Over Time</Text>
+              <LineChart
+                data={{
+                  labels: accuracyData.slice(-6).map((a) => a.date),
+                  datasets: [{ 
+                    data: accuracyData.slice(-6).map((a) => a.accuracy),
+                    color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
+                    strokeWidth: 3
+                  }],
+                }}
+                width={screenWidth - 32}
+                height={200}
+                chartConfig={chartConfig}
+                style={styles.chart}
+                bezier
+              />
+            </View>
+          </>
+        )}
+        
+        {Object.keys(categoryScores).length > 1 && (
+          <View style={styles.chartSection}>
+            <Text style={styles.chartTitle}>Average Score by Category</Text>
+            <BarChart
+              data={{
+                labels: barData.map((b) => b.category.slice(0, 8)),
+                datasets: [{ data: barData.map((b) => Math.round(b.avgScore * 10) / 10) }],
+              }}
+              width={screenWidth - 32}
+              height={200}
+              chartConfig={chartConfig}
+              style={styles.chart}
+              yAxisLabel=""
+              yAxisSuffix=""
+              showValuesOnTopOfBars={true}
+            />
+          </View>
+        )}
+        
+        {Object.keys(typeCounts).length > 1 && (
+          <View style={styles.chartSection}>
+            <Text style={styles.chartTitle}>Quiz Type Distribution</Text>
+            <PieChart
+              data={pieData}
+              width={screenWidth - 32}
+              height={200}
+              chartConfig={chartConfig}
+              accessor={'count'}
+              backgroundColor={'transparent'}
+              paddingLeft={'15'}
+              style={styles.chart}
+              center={[10, 0]}
+              hasLegend={true}
+            />
+          </View>
+        )}
+        
+        {history.length < 2 && (
+          <View style={styles.fallbackChart}>
+            <Text style={styles.fallbackText}>
+              📈 Not enough quiz data to show progress yet.
+            </Text>
+            <Text style={styles.fallbackSubtext}>
+              Complete more quizzes to see detailed progress charts!
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  return (
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {renderHeader()}
+      
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading quiz progress...</Text>
+        </View>
+      ) : history.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyTitle}>🎯 No Quiz Attempts Yet</Text>
+          <Text style={styles.emptyText}>
+            Start taking quizzes to see your child's progress and learning trends here!
+          </Text>
+        </View>
+      ) : (
+        <>
+          {renderSummaryStats()}
+          {renderInsights()}
+          
+          <View style={styles.attemptsContainer}>
+            <Text style={styles.sectionTitle}>🎯 Recent Attempts</Text>
+            <FlatList
+              data={history.slice(-10).reverse()}
+              keyExtractor={(_, i) => i.toString()}
+              renderItem={renderAttemptCard}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.attemptsList}
+            />
+          </View>
+          
+          {renderCharts()}
+        </>
+      )}
+    </ScrollView>
+  );
+}
+
+const chartConfig = {
+  backgroundGradientFrom: '#ffffff',
+  backgroundGradientTo: '#ffffff',
+  color: (opacity = 1) => `rgba(99, 102, 241, ${opacity})`,
+  labelColor: (opacity = 1) => `rgba(55, 65, 81, ${opacity})`,
+  strokeWidth: 2,
+  barPercentage: 0.7,
+  useShadowColorFromDataset: false,
+  decimalPlaces: 0,
+  propsForDots: {
+    r: '4',
+    strokeWidth: '2',
+    stroke: '#6366f1',
+  },
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8fafc',
+  },
+  header: {
+    backgroundColor: '#6366f1',
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  backButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#e0e7ff',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 100,
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 100,
+    paddingHorizontal: 40,
+  },
+  emptyTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  summaryContainer: {
+    margin: 20,
+    marginTop: 30,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#374151',
+    marginBottom: 16,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  statCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 20,
+    flex: 1,
+    marginHorizontal: 4,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#6366f1',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#6b7280',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  insightContainer: {
+    margin: 20,
+    marginTop: 10,
+    backgroundColor: '#f0f9ff',
+    borderRadius: 16,
+    padding: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: '#0ea5e9',
+  },
+  insightText: {
+    fontSize: 16,
+    color: '#0369a1',
+    fontWeight: '600',
+    lineHeight: 22,
+  },
+  attemptsContainer: {
+    margin: 20,
+    marginTop: 10,
+  },
+  attemptsList: {
+    paddingRight: 20,
+  },
+  attemptCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 20,
+    marginRight: 16,
+    minWidth: 280,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  cardCategory: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#374151',
+    flex: 1,
+  },
+  cardAccuracy: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#10b981',
+    backgroundColor: '#f0fdf4',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  cardContent: {
+    gap: 8,
+  },
+  cardDetail: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  chartsContainer: {
+    margin: 20,
+    marginTop: 10,
+  },
+  chartSection: {
+    marginBottom: 30,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 16,
+  },
+  chart: {
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  fallbackChart: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 40,
+    alignItems: 'center',
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  fallbackText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  fallbackSubtext: {
+    fontSize: 14,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+});

@@ -240,11 +240,25 @@ export default function BottomTabs() {
         }} 
       />
       <Tabs.Screen 
+        name="screens/QuizProgressScreen" 
+        options={{ 
+          href: null, // This hides it from the tab bar
+          tabBarStyle: { display: 'none' }, // Hide the bottom tab bar for this screen
+        }} 
+      />
+      <Tabs.Screen 
         name="screens/quiz/QuizSummary" 
         options={{ 
           href: null, // This hides it from the tab bar
         }} 
       />
+      <Tabs.Screen 
+        name="screens/quiz/QuizDetailScreen.styles" 
+        options={{ 
+          href: null, // This hides it from the tab bar
+        }} 
+      />
+      
     </Tabs>
         
   );
