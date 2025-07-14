@@ -329,96 +329,76 @@ export default function QuizDetailScreen() {
     if (!img) return null;
     const key = img.trim().toLowerCase();
     switch (key) {
-      case 'apple.png':
-      case 'apple.jpg':
-        return require('../../../assets/images/apple.jpg');
-      case 'bus.png':
-      case 'bus.jpeg':
-        return require('../../../assets/images/bus.jpeg');
-      case 'chair.png':
-      case 'chair.jpeg':
-        return require('../../../assets/images/chair.jpg');
-      case 'bed.png':
-      case 'bed.jpeg':
-        return require('../../../assets/images/bed.jpeg');
-      case 'hospital.png':
-      case 'hospital.jpeg':
-        return require('../../../assets/images/hospital.jpg');
-      case 'momo.jpg':
-        return require('../../../assets/images/momo.jpg');
-      case 'playground.png':
-      case 'playground.jpeg':
-        return require('../../../assets/images/playground.png');
-      case 'restaurant.png':
-      case 'restaurant.jpeg':
-        return require('../../../assets/images/restaurant.png');
-      case 'soap.png':
-      case 'soap.jpeg':
-        return require('../../../assets/images/soap.jpg');
-      case 'sleeping.png':
-      case 'sleeping.jpeg':
-        return require('../../../assets/images/sleeping.jpeg');
-      case 'reading.png':
-      case 'reading.jpeg':
-        return require('../../../assets/images/reading.jpeg');
-      case 'bath.png':
-      case 'bath.jpeg':
-        return require('../../../assets/images/bath.jpeg');
-      case 'playing.png':
-      case 'playing.jpg':
-        return require('../../../assets/images/playing.jpg');
-      case 'rice.png':
-      case 'rice.jpeg':
-        return require('../../../assets/images/rice.jpg');
-      case 'book.png':
-      case 'book.jpeg':
-        return require('../../../assets/images/book.jpg');
-      case 'spoon.png':
-      case 'spoon.jpeg':
-        return require('../../../assets/images/spoon.jpg');
-      case 'banana.png':
-      case 'banana.jpeg':
-        return require('../../../assets/images/banana.jpg');
-      case 'toothbrush.png':
-      case 'toothbrush.jpeg':
-        return require('../../../assets/images/toothbrush.jpg');
-      case 'frog.png':
-      case 'frog.jpg':
-      case 'frog.jpeg':
-        return require('../../../assets/images/frog.jpeg');
-      case 'dog.png':
-      case 'dog.jpg':
-      case 'dog.jpeg':
-        return require('../../../assets/images/dog.jpeg');
-      case 'lion.png':
-      case 'lion.jpg':
-      case 'lion.jpeg':
-        return require('../../../assets/images/lion.jpeg');
-      case 'cow.png':
-      case 'cow.jpg':
-      case 'cow.jpeg':
-        return require('../../../assets/images/cow.jpeg');
-      // Additional activity mappings for Visual Activity Quiz
-      case 'eating.png':
-      case 'eating.jpg':
-      case 'eating.jpeg':
-        return require('../../../assets/images/rice.jpg'); // Use rice image for eating activity
-      case 'studying.png':
-      case 'studying.jpg':
-      case 'studying.jpeg':
-        return require('../../../assets/images/reading.jpeg'); // Use reading image for studying activity
-      case 'brushing.png':
-      case 'brushing.jpg':
-      case 'brushing.jpeg':
-        return require('../../../assets/images/toothbrush.jpg'); // Use toothbrush for brushing activity
-      case 'bathroom.png':
-      case 'bathroom.jpg':
-      case 'bathroom.jpeg':
-        return require('../../../assets/images/bath.jpeg'); // Use bath image for bathroom
-      case 'classroom.png':
-      case 'classroom.jpg':
-      case 'classroom.jpeg':
-        return require('../../../assets/images/book.jpg'); // Use book image for classroom
+      case 'adaptive-icon.png': return require('../../../assets/images/adaptive-icon.png');
+      case 'app.png': return require('../../../assets/images/app.png');
+      case 'apple.jpg': return require('../../../assets/images/apple.jpg');
+      case 'apple2.jpg': return require('../../../assets/images/APPLE2.jpg');
+      case 'banana.jpg': return require('../../../assets/images/banana.jpg');
+      case 'bath.jpeg': return require('../../../assets/images/bath.jpeg');
+      case 'bathtub.jpg': return require('../../../assets/images/BATHtub.jpg');
+      case 'bed.jpeg': return require('../../../assets/images/bed.jpeg');
+      case 'bedroom.jpg': return require('../../../assets/images/BEDROOM.jpg');
+      case 'book.jpg': return require('../../../assets/images/book.jpg');
+      case 'brush.jpg': return require('../../../assets/images/BRUSH.jpg');
+      case 'brushing.png': return require('../../../assets/images/brushing.png');
+      case 'bus.jpeg': return require('../../../assets/images/bus.jpeg');
+      case 'car.jpg': return require('../../../assets/images/CAR.jpg');
+      case 'chair.jpg': return require('../../../assets/images/chair.jpg');
+      case 'classroom.png': return require('../../../assets/images/classroom.png');
+      case 'cooking.jpg': return require('../../../assets/images/cooking.jpg');
+      case 'cow.jpeg': return require('../../../assets/images/cow.jpeg');
+      case 'cycle.jpg': return require('../../../assets/images/CYCLE.jpg');
+      case 'cycling.png': return require('../../../assets/images/cycling.png');
+      case 'dog.jpeg': return require('../../../assets/images/dog.jpeg');
+      case 'eating.jpg': return require('../../../assets/images/EATING.jpg');
+      case 'eye.png': return require('../../../assets/images/eye.png');
+      case 'farm.jpeg': return require('../../../assets/images/FARM.jpeg');
+      case 'farming-tool.jpg': return require('../../../assets/images/FARMING-TOOL.jpg');
+      case 'farming.jpg': return require('../../../assets/images/farming.jpg');
+      case 'favicon.png': return require('../../../assets/images/favicon.png');
+      case 'flying-bird.jpg': return require('../../../assets/images/flying-bird.jpg');
+      case 'football.png': return require('../../../assets/images/FOOTBALL.png');
+      case 'frog.jpeg': return require('../../../assets/images/frog.jpeg');
+      case 'hidden.png': return require('../../../assets/images/hidden.png');
+      case 'home.jpg': return require('../../../assets/images/HOME.jpg');
+      case 'hospital.jpg': return require('../../../assets/images/hospital.jpg');
+      case 'hospital2.jpg': return require('../../../assets/images/hospital2.jpg');
+      case 'icon.png': return require('../../../assets/images/icon.png');
+      case 'jungle.jpg': return require('../../../assets/images/JUNGLE.jpg');
+      case 'kitchen.jpg': return require('../../../assets/images/KITCHEN.jpg');
+      case 'lion.jpeg': return require('../../../assets/images/lion.jpeg');
+      case 'livingroom.jpg': return require('../../../assets/images/LIVINGROOM.jpg');
+      case 'logo.png': return require('../../../assets/images/logo.png');
+      case 'logo2.png': return require('../../../assets/images/logo2.png');
+      case 'momo.jpg': return require('../../../assets/images/momo.jpg');
+      case 'partial-react-logo.png': return require('../../../assets/images/partial-react-logo.png');
+      case 'pencil.jpg': return require('../../../assets/images/PENCIL.jpg');
+      case 'picnic.png': return require('../../../assets/images/picnic.png');
+      case 'playground.png': return require('../../../assets/images/playground.png');
+      case 'playing.jpg': return require('../../../assets/images/playing.jpg');
+      case 'pngtree-kids-playing-png-image_11365552 1.png': return require('../../../assets/images/pngtree-kids-playing-png-image_11365552 1.png');
+      case 'profile.jpg': return require('../../../assets/images/profile.jpg');
+      case 'raining.jpg': return require('../../../assets/images/RAINING.jpg');
+      case 'reading.jpeg': return require('../../../assets/images/reading.jpeg');
+      case 'restaurant.png': return require('../../../assets/images/restaurant.png');
+      case 'rice.jpg': return require('../../../assets/images/rice.jpg');
+      case 'road.jpg': return require('../../../assets/images/ROAD.jpg');
+      case 'school.jpg': return require('../../../assets/images/SCHOOL.jpg');
+      case 'shop.jpg': return require('../../../assets/images/SHOP.jpg');
+      case 'shoping.jpg': return require('../../../assets/images/shoping.jpg');
+      case 'sleeping.jpeg': return require('../../../assets/images/sleeping.jpeg');
+      case 'soap.jpeg': return require('../../../assets/images/SOAP.jpeg');
+      case 'splash-icon.png': return require('../../../assets/images/splash-icon.png');
+      case 'spoon.jpg': return require('../../../assets/images/spoon.jpg');
+      case 'swimmingpool.jpg': return require('../../../assets/images/SWIMMINGPOOL.jpg');
+      case 'swimtube.jpeg': return require('../../../assets/images/Swimtube.jpeg');
+      case 'tiger.jpg': return require('../../../assets/images/TIGER.jpg');
+      case 'tree.jpg': return require('../../../assets/images/TREE.jpg');
+      case 'tv.jpeg': return require('../../../assets/images/TV.jpeg');
+      case 'watching-tv.png': return require('../../../assets/images/watching-tv.png');
+      case 'watering.png': return require('../../../assets/images/watering.png');
+      case 'writing.png': return require('../../../assets/images/writing.png');
+      case 'zoo.png': return require('../../../assets/images/zoo.png');
       default:
         return null;
     }

@@ -1078,3 +1078,102 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
+
+
+const getImage = (img?: string) => {
+    if (!img) return null;
+    const key = img.trim().toLowerCase();
+    switch (key) {
+      case 'apple.png':
+      case 'apple.jpg':
+        return require('../../../assets/images/apple.jpg');
+      case 'bus.png':
+      case 'bus.jpeg':
+        return require('../../../assets/images/bus.jpeg');
+      case 'chair.png':
+      case 'chair.jpeg':
+        return require('../../../assets/images/chair.jpg');
+      case 'bed.png':
+      case 'bed.jpeg':
+        return require('../../../assets/images/bed.jpeg');
+      case 'hospital.png':
+      case 'hospital.jpeg':
+        return require('../../../assets/images/hospital.jpg');
+      case 'momo.jpg':
+        return require('../../../assets/images/momo.jpg');
+      case 'playground.png':
+      case 'playground.jpeg':
+        return require('../../../assets/images/playground.png');
+      case 'restaurant.png':
+      case 'restaurant.jpeg':
+        return require('../../../assets/images/restaurant.png');
+      case 'soap.png':
+      case 'soap.jpeg':
+        return require('../../../assets/images/soap.jpg');
+      case 'sleeping.png':
+      case 'sleeping.jpeg':
+        return require('../../../assets/images/sleeping.jpeg');
+      case 'reading.png':
+      case 'reading.jpeg':
+        return require('../../../assets/images/reading.jpeg');
+      case 'bath.png':
+      case 'bath.jpeg':
+        return require('../../../assets/images/bath.jpeg');
+      case 'playing.png':
+      case 'playing.jpg':
+        return require('../../../assets/images/playing.jpg');
+      case 'rice.png':
+      case 'rice.jpeg':
+        return require('../../../assets/images/rice.jpg');
+      case 'book.png':
+      case 'book.jpeg':
+        return require('../../../assets/images/book.jpg');
+      case 'spoon.png':
+      case 'spoon.jpeg':
+        return require('../../../assets/images/spoon.jpg');
+      case 'banana.png':
+      case 'banana.jpeg':
+        return require('../../../assets/images/banana.jpg');
+      case 'toothbrush.png':
+      case 'toothbrush.jpeg':
+        return require('../../../assets/images/toothbrush.jpg');
+      case 'frog.png':
+      case 'frog.jpg':
+      case 'frog.jpeg':
+        return require('../../../assets/images/frog.jpeg');
+      case 'dog.png':
+      case 'dog.jpg':
+      case 'dog.jpeg':
+        return require('../../../assets/images/dog.jpeg');
+      case 'lion.png':
+      case 'lion.jpg':
+      case 'lion.jpeg':
+        return require('../../../assets/images/lion.jpeg');
+      case 'cow.png':
+      case 'cow.jpg':
+      case 'cow.jpeg':
+        return require('../../../assets/images/cow.jpeg');
+      case 'eating.png':
+      case 'eating.jpg':
+      case 'eating.jpeg':
+        return require('../../../assets/images/eating.jpg'); // Use rice image for eating activity
+      case 'studying.png':
+      case 'studying.jpg':
+      case 'studying.jpeg':
+        return require('../../../assets/images/reading.jpeg'); // Use reading image for studying activity
+      case 'brushing.png':
+      case 'brushing.jpg':
+      case 'brushing.jpeg':
+        return require('../../../assets/images/brushing.png'); // Use toothbrush for brushing activity
+      case 'bathroom.png':
+      case 'bathroom.jpg':
+      case 'bathroom.jpeg':
+        return require('../../../assets/images/bathtub.jpg'); // Use bath image for bathroom
+      case 'classroom.png':
+      case 'classroom.jpg':
+      case 'classroom.jpeg':
+        return require('../../../assets/images/classroom.png'); // Use book image for classroom
+      default:
+        return null;
+    }
+  };
